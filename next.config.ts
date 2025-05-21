@@ -1,16 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
-    config.infrastructureLogging = {
-      level: "error", // Suppress warnings
-    };
-    return config;
+  experimental: {
+    optimizePackageImports: ["@chakra-ui/react"],
   },
+  output: 'export',
   images: {
     dangerouslyAllowSVG: true,
-unoptimized: true,
-  
+    unoptimized: true,
 
   remotePatterns: [
     {

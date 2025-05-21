@@ -1,21 +1,17 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Provider } from "@/components/ui/provider";
-import { BottomNav, MainNav, TopNav } from "@/components/ui/navbar";
 import { BottomFooter, MainFooter } from "@/components/ui/footer";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { BottomNav, MainNav, TopNav } from "@/components/ui/navbar";
+import { Provider } from "@/components/ui/provider";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+// import { Analytics } from "@vercel/analytics/react";
+// import { SpeedInsights } from "@vercel/speed-insights/next";
 import Whatsapp from "@/components/Whatsapp";
 import NextTopLoader from "nextjs-toploader";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
   subsets: ["latin"],
 });
 
@@ -31,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
         <NextTopLoader color="#aa1f30" showSpinner />
         <Provider>
           <TopNav />
@@ -43,8 +39,8 @@ export default function RootLayout({
           <BottomFooter />
           <Whatsapp />
         </Provider>
-        <Analytics />
-        <SpeedInsights />
+        {/* <Analytics />
+        <SpeedInsights /> */}
       </body>
     </html>
   );

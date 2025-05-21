@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.MY_EMAIL,
-        pass: process.env.MY_PASSWORD,
+        user: "client-service@jmassociates.co.ke",
+        pass: "p+?JV.Xe@hmd",
       },
     });
 

@@ -1,60 +1,23 @@
-"use client";
-import { CareersData } from "@/utils/constants";
-import {
-  Box,
-  Heading,
-  Text,
-  VStack,
-  Button,
-  Container,
-} from "@chakra-ui/react";
-import { useParams } from "next/navigation";
-import React from "react";
+import CareerDetail from "@/components/common/career-detail";
+import { notFound } from "next/navigation";
 
-const JobDetailsPage = () => {
-  const { id } = useParams();
-  const jd = id as string;
-  let jobData: any = null; // Initialize jobData to null
+interface Props {
+  params: Promise<{ id: string }>;
+}
+const CareerDetailPage = async ({ params }: Props) => {
+  const { id } = await params;
 
-  // Find the job data based on the jobId
-  jobData = CareersData.find((job) => job.id === Number(jd));
+  if (!id) return notFound();
 
-  return (
-    <Container maxW="3xl" py={10}>
-      <VStack gap={8} align="start">
-        {/* job title */}
-        <Heading size="xl">{jobData?.title}</Heading>
-
-        <Box w="full">
-          <Heading size="md" mb={2}>
-            Requirements
-          </Heading>
-          <Text>
-            - Proven experience in web development.
-            <br />- Strong understanding of React and Next.js.
-            <br />- Familiarity with Chakra UI is a plus.
-          </Text>
-        </Box>
-
-        <Box w="full">
-          <Heading size="md" mb={2}>
-            Qualifications
-          </Heading>
-          <Text>
-            - Bachelor's degree in Computer Science or related field.
-            <br />- Excellent communication skills.
-            <br />- Ability to work independently and as part of a team.
-          </Text>
-        </Box>
-
-        <Box w="full" textAlign="center">
-          <Button colorScheme="teal" size="lg">
-            Apply Now
-          </Button>
-        </Box>
-      </VStack>
-    </Container>
-  );
+  return <CareerDetail id={id} />;
 };
 
-export default JobDetailsPage;
+export default CareerDetailPage;
+
+export async function generateStaticParams() {
+  return [
+    {
+      id: "10",
+    },
+  ];
+}
