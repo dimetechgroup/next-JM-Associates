@@ -15,6 +15,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import emailjs from "@emailjs/browser";
+import { toaster } from "../toaster";
 
 export default function GetAQuote() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,28 +33,33 @@ export default function GetAQuote() {
   const handleFormSubmit = async (data: QuoteFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/quote", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      await emailjs.send(
+        "service_pwu86hk",
+        "template_eumafxt",
+        {
+          from_name: data.Fullname,
+          from_email: data.Email,
+          phone: data.Phone,
+          company: data.Company,
+          message: data.Message,
         },
-        body: JSON.stringify(data),
-      });
+        "S1k6jCwLU4goE_9wb"
+      );
 
-      const result = await response.json();
+      // toaster.create({
+      //   title: "Message Sent",
+      //   description: "Your message was sent successfully!",
+      //   type: "success",
+      // });
+      alert("Message sent successfully!");
 
-      if (response.ok) {
-        alert("Quote request sent successfully!");
-        reset();
-      } else {
-        alert("Failed to send quote request: " + result.error);
-      }
+      reset();
     } catch (error) {
-      if (error instanceof Error) {
-        alert("An error occurred: " + error.message);
-      } else {
-        alert("An unknown error occurred.");
-      }
+      toaster.create({
+        title: "Error",
+        description: "There was an error sending your message.",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }

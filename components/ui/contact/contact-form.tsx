@@ -3,7 +3,8 @@
 import { ContactFormData, ContactFormSchema } from "@/schema/ContactSchema";
 import { useState } from "react";
 import { toaster } from "@/components/ui/toaster";
-import axios from "axios";
+import emailjs from "@emailjs/browser";
+
 import {
   Button,
   Field,
@@ -17,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const ContactForm = () => {
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -26,24 +27,30 @@ const ContactForm = () => {
   } = useForm<ContactFormData>({
     resolver: zodResolver(ContactFormSchema),
   });
-  const handleFormSubmit = async (data: ContactFormData) => {
-    setisLoading(true);
-    try {
-      const response = await axios.post("/api/contact", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (response.data.status === "success") {
-        toaster.create({
-          title: "Success",
-          description: "Your message has been sent successfully.",
-          type: "success",
-        });
-        alert("Message sent successfully!");
-        reset();
-      }
+  const handleFormSubmit = async (data: ContactFormData) => {
+    setIsLoading(true);
+    try {
+      await emailjs.send(
+        "service_pwu86hk",
+        "template_33g1mff",
+        {
+          from_name: data.Fullname,
+          from_email: data.Email,
+          subject: data.Subject,
+          message: data.Message,
+        },
+        "S1k6jCwLU4goE_9wb"
+      );
+
+      // toaster.create({
+      //   title: "Message Sent",
+      //   description: "Your message was sent successfully!",
+      //   type: "success",
+      // });
+      alert("Message sent successfully!");
+
+      reset();
     } catch (error) {
       toaster.create({
         title: "Error",
@@ -51,7 +58,7 @@ const ContactForm = () => {
         type: "error",
       });
     } finally {
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -71,7 +78,6 @@ const ContactForm = () => {
         marginY={"2rem"}
         marginBottom={{ base: "2rem", md: "0" }}
       >
-        {" "}
         <Stack>
           <Fieldset.Legend>Leave a message</Fieldset.Legend>
           <Fieldset.HelperText>

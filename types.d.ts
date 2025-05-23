@@ -11,4 +11,5 @@ interface DefaultSectionInterface {
   Icon?: string;
   document:{path: string};
   location?: string;
+  Attachment:{path: string};
 }

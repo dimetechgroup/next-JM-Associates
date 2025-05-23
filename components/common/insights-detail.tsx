@@ -5,12 +5,10 @@ import { useDefaultSectionData } from "@/utils/hooks/useDefaultSectionData";
 import { Box, Heading, Image, Text } from "@chakra-ui/react";
 
 interface Props {
-id:string
-  }
+  id: string;
+}
 
-const InsightDetail = ({id}:Props) => {
-
-
+const InsightDetail = ({ id }: Props) => {
   const {
     error: insightError,
     loading: insightLoading,
@@ -59,7 +57,7 @@ const InsightDetail = ({id}:Props) => {
         <Box mt={8} textAlign="center">
           <a
             href={`https://cms.jmassociates.co.ke/storage/uploads${
-              sectionData!.document.path ?? ""
+              sectionData!.Attachment.path ?? ""
             }`}
             target="_blank"
             rel="noopener noreferrer"
