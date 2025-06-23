@@ -1,4 +1,5 @@
 import { CiLocationOn } from "react-icons/ci";
+import { FaDropbox } from "react-icons/fa";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaX } from "react-icons/fa6";
 import { FiPhone } from "react-icons/fi";
 import { TbMailBitcoin } from "react-icons/tb";
@@ -96,6 +97,14 @@ export const contactsData = [
     title: "Location",
     icon: <CiLocationOn />,
     link: `https://goo.gl/maps/6K3xk9vY7G1gJ5nV6`,
+    bg: "red.500",
+    color: "black",
+  },
+  {
+    label: "23598 - 00625",
+    title: "P.O Box",
+    icon: <FaDropbox />,
+    link: `https://jmassociates.co.ke`,
     bg: "red.500",
     color: "black",
   },
