@@ -159,6 +159,22 @@ const HomeNews = () => {
             </GridItem>
           ))}
         </Grid>
+        <Flex justify="center" mt={4}>
+          <Link href="/blogs/insights">
+            <Box
+              as="button"
+              px={4}
+              py={2}
+              bg="red.500"
+              color="white"
+              borderRadius="md"
+              fontWeight="bold"
+              _hover={{ bg: "red.600", cursor: "pointer" }}
+            >
+              View All Insights
+            </Box>
+          </Link>
+        </Flex>
       </Box>
     </Box>
   );

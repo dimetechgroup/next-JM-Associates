@@ -1,13 +1,5 @@
 import { contactsData, MarginX } from "@/utils/constants";
-import {
-  Box,
-  Flex,
-  Heading,
-  Icon,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
 import Link from "next/link";
 import ContactForm from "./contact-form";
