@@ -43,11 +43,6 @@ const ContactForm = () => {
         "S1k6jCwLU4goE_9wb"
       );
 
-      // toaster.create({
-      //   title: "Message Sent",
-      //   description: "Your message was sent successfully!",
-      //   type: "success",
-      // });
       alert("Message sent successfully!");
 
       reset();
