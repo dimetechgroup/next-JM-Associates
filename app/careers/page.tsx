@@ -58,7 +58,10 @@ const CareersPage = () => {
                 <Text fontSize="md" color="gray.500" mt={2}>
                   {job.location}
                 </Text>
-                <NextLink href={`/careers/${job._id}`} passHref>
+                <NextLink
+                  href={`https://cms.jmassociates.co.ke/storage/uploads/${job.attachment?.path}`}
+                  passHref
+                >
                   <Button mt={4} colorScheme="teal">
                     View Details
                   </Button>

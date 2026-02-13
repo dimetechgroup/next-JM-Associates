@@ -7,7 +7,7 @@ import TeamCard from "../team/page";
 const page = () => {
   return (
     <>
-      <CommonHero title="About Us" image="/Home/about-bg.jpeg" />
+      <CommonHero title="About Us" image="/about-new.jpeg" />
       <CompanyHistory />
       {/*       <Mission_Vission /> */}
       <TeamCard />
