@@ -57,7 +57,7 @@ const InsightDetail = ({ id }: Props) => {
         <Box mt={8} textAlign="center">
           <a
             href={`https://cms.jmassociates.co.ke/storage/uploads${
-              sectionData!.attachment.path ?? ""
+              sectionData!.Attachment!.path ?? ""
             }`}
             target="_blank"
             rel="noopener noreferrer"
