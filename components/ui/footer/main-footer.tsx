@@ -54,6 +54,7 @@ const Footer = () => {
             w={40}
             h={20}
             objectFit="cover"
+            loading="eager"
           />
           <Text fontSize="sm">
             We offer professional services in Audit, Tax, Consulting, and

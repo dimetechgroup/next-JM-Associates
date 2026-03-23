@@ -25,6 +25,7 @@ const MainNav = () => {
               alt="logo"
               width={useBreakpointValue({ base: 100, md: 200 })}
               height={useBreakpointValue({ base: 50, md: 100 })}
+              loading="eager"
             />
           </Link>
 
