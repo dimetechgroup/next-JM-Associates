@@ -9,7 +9,7 @@ const page = () => {
     <>
       <CommonHero title="About Us" image="/about-new.jpeg" />
       <CompanyHistory />
-      {/*       <Mission_Vission /> */}
+      <Mission_Vission />
       <TeamCard />
     </>
   );
