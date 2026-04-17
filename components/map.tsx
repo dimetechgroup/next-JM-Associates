@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 
 const Map = () => {
   return (
-    <Box h={"45vh"}>
+    <Box h={"45vh"} p={{ base: 5 }}>
       <iframe
         src={MAPS_EMBED}
         width="100%"

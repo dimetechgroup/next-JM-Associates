@@ -1,6 +1,7 @@
 interface DefaultSectionInterface {
   _id: string;
   title: string;
+  name?: string;
   subtitle?: string;
   description?: string;
   link?: string;
@@ -11,5 +12,6 @@ interface DefaultSectionInterface {
   Icon?: string;
   document?:{path?: string};
   location?: string;
-  Attachment:{path: string};
+  no?: number;
+  attachment:{path: string};
 }

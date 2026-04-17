@@ -1,36 +1,41 @@
 import { CiLocationOn } from "react-icons/ci";
-import { FaDropbox } from "react-icons/fa";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaX } from "react-icons/fa6";
+import {
+  FaDropbox,
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+} from "react-icons/fa";
+import { FaLinkedin, FaSquareXTwitter, FaTwitter, FaX } from "react-icons/fa6";
 import { FiPhone } from "react-icons/fi";
 import { TbMailBitcoin } from "react-icons/tb";
 
 export const MarginX = {
-  base: "3%",
-  sm: "5%",
-  md: "6%",
-  lg: "8%",
-  xl: "10%",
+  base: "2%",
+  sm: "1%",
+  md: "4%",
+  lg: "5%",
+  xl: "7%",
 };
 
 export const socialIcons = [
   {
     link: "https://www.facebook.com/jmassociateske",
-    icon: <FaFacebookF />,
+    icon: FaFacebookF,
     color: "#3b5998",
   },
   {
     link: "https://www.instagram.com/jmassociatesllp",
-    icon: <FaInstagram />,
+    icon: FaInstagram,
     color: "#c13584",
   },
   {
     link: "https://www.linkedin.com/company/jm-associates-ke/",
-    icon: <FaLinkedinIn />,
-    color: "linear-gradient(90deg, #0077b5 0%, #0077b5 50%, #0077b5 100%)",
+    icon: FaLinkedin,
+    color: "#3b5998",
   },
   {
     link: "https://x.com/JMAssociatesLLP",
-    icon: <FaX />,
+    icon: FaSquareXTwitter,
     color: "#000000",
   },
 ];

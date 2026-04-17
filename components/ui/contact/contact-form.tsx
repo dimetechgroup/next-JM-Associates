@@ -6,6 +6,7 @@ import { toaster } from "@/components/ui/toaster";
 import emailjs from "@emailjs/browser";
 
 import {
+  Box,
   Button,
   Field,
   Fieldset,
@@ -13,12 +14,16 @@ import {
   Stack,
   Text,
   Textarea,
+  Heading,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const ContactForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -30,116 +35,190 @@ const ContactForm = () => {
 
   const handleFormSubmit = async (data: ContactFormData) => {
     setIsLoading(true);
+
     try {
       await emailjs.send(
-        "service_pwu86hk",
-        "template_33g1mff",
+        "service_0zolm9a",
+        "template_m03wyr3",
         {
-          from_name: data.Fullname,
-          from_email: data.Email,
+          name: data.Fullname,
+          email: data.Email,
           subject: data.Subject,
           message: data.Message,
+          time: new Date().toLocaleString(),
         },
-        "S1k6jCwLU4goE_9wb"
+        "nXgCxgWCHRmlr07qR",
       );
 
-      alert("Message sent successfully!");
+      toast.success("Message sent successfully! We will get back to you soon.");
 
       reset();
     } catch (error) {
-      toaster.create({
-        title: "Error",
-        description: "There was an error sending your message.",
-        type: "error",
-      });
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again later.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    <Box as="form" onSubmit={handleSubmit(handleFormSubmit)}>
       <Fieldset.Root
-        borderWidth={"1px"}
-        borderRadius={"lg"}
-        borderColor={"brand.gray"}
-        padding={"2rem"}
-        boxShadow={"lg"}
-        _hover={{ boxShadow: "xl", cursor: "pointer" }}
-        _active={{ boxShadow: "md" }}
-        _focus={{ boxShadow: "md" }}
-        transition={"box-shadow 0.3s"}
-        marginX={{ base: "1rem", md: "2rem" }}
-        marginY={"2rem"}
-        marginBottom={{ base: "2rem", md: "0" }}
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="2xl"
+        p={{ base: 8, md: 12 }}
+        bg="white"
+        boxShadow="sm"
+        maxW="full"
       >
-        <Stack>
-          <Fieldset.Legend>Leave a message</Fieldset.Legend>
-          <Fieldset.HelperText>
-            Please fill in the form below to send us a message.
-          </Fieldset.HelperText>
+        <Stack gap={8}>
+          {/* Header */}
+          <Stack gap={2}>
+            <Heading
+              as="h3"
+              size="lg"
+              color="gray.800"
+              fontWeight="600"
+              letterSpacing="-0.02em"
+            >
+              Send us a Message
+            </Heading>
+            <Text color="gray.600" fontSize="md">
+              We typically respond within 24–48 hours.
+            </Text>
+          </Stack>
+
+          <Stack gap={6}>
+            {/* Full Name */}
+            <Field.Root invalid={!!errors.Fullname}>
+              <Field.Label fontWeight="500" color="gray.700">
+                Full Name
+              </Field.Label>
+              <Input
+                {...register("Fullname")}
+                placeholder="John Doe"
+                size="lg"
+                borderColor="gray.300"
+                p={5}
+                _focus={{
+                  borderColor: "#aa1f30",
+                  boxShadow: "0 0 0 1px #aa1f30",
+                }}
+                _hover={{ borderColor: "gray.400" }}
+              />
+              {errors.Fullname && (
+                <Text fontSize="sm" color="red.500" mt={1}>
+                  {errors.Fullname.message}
+                </Text>
+              )}
+            </Field.Root>
+
+            {/* Email */}
+            <Field.Root invalid={!!errors.Email}>
+              <Field.Label fontWeight="500" color="gray.700">
+                Email Address
+              </Field.Label>
+              <Input
+                {...register("Email")}
+                type="email"
+                placeholder="you@example.com"
+                size="lg"
+                p={5}
+                borderColor="gray.300"
+                _focus={{
+                  borderColor: "#aa1f30",
+                  boxShadow: "0 0 0 1px #aa1f30",
+                }}
+                _hover={{ borderColor: "gray.400" }}
+              />
+              {errors.Email && (
+                <Text fontSize="sm" color="red.500" mt={1}>
+                  {errors.Email.message}
+                </Text>
+              )}
+            </Field.Root>
+
+            {/* Subject */}
+            <Field.Root invalid={!!errors.Subject}>
+              <Field.Label fontWeight="500" color="gray.700">
+                Subject
+              </Field.Label>
+              <Input
+                {...register("Subject")}
+                placeholder="How can we help you?"
+                size="lg"
+                p={5}
+                borderColor="gray.300"
+                _focus={{
+                  borderColor: "#aa1f30",
+                  boxShadow: "0 0 0 1px #aa1f30",
+                }}
+                _hover={{ borderColor: "gray.400" }}
+              />
+              {errors.Subject && (
+                <Text fontSize="sm" color="red.500" mt={1}>
+                  {errors.Subject.message}
+                </Text>
+              )}
+            </Field.Root>
+
+            {/* Message */}
+            <Field.Root invalid={!!errors.Message}>
+              <Field.Label fontWeight="500" color="gray.700">
+                Message
+              </Field.Label>
+              <Textarea
+                {...register("Message")}
+                placeholder="Please share your inquiry or message..."
+                size="lg"
+                minH="160px"
+                borderColor="gray.300"
+                p={5}
+                _focus={{
+                  borderColor: "#aa1f30",
+                  boxShadow: "0 0 0 1px #aa1f30",
+                }}
+                _hover={{ borderColor: "gray.400" }}
+              />
+              {errors.Message && (
+                <Text fontSize="sm" color="red.500" mt={1}>
+                  {errors.Message.message}
+                </Text>
+              )}
+            </Field.Root>
+          </Stack>
+
+          {/* Submit Button */}
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              type="submit"
+              size="lg"
+              w="full"
+              bg="#aa1f30"
+              color="white"
+              fontWeight="600"
+              py={7}
+              fontSize="md"
+              letterSpacing="0.5px"
+              _hover={{
+                bg: "#8a1926",
+                transform: "translateY(-1px)",
+              }}
+              loading={isLoading}
+              loadingText="Sending Message..."
+              transition="all 0.3s ease"
+            >
+              SEND MESSAGE
+            </Button>
+          </motion.div>
+
+          <Text fontSize="xs" color="gray.500" textAlign="center">
+            All fields are required. Your information is secure.
+          </Text>
         </Stack>
-        <Fieldset.Content>
-          <Field.Root invalid={!!errors.Fullname}>
-            <Field.Label>Full Name</Field.Label>
-            <Input
-              {...register("Fullname")}
-              required
-              placeholder="Your full name"
-            />
-            {errors.Fullname && (
-              <Text color="red.500">{errors.Fullname.message}</Text>
-            )}
-          </Field.Root>
-
-          <Field.Root invalid={!!errors.Email}>
-            <Field.Label>Email</Field.Label>
-            <Input
-              {...register("Email")}
-              required
-              type="email"
-              autoComplete="email"
-              autoCapitalize="off"
-              placeholder="Your email address"
-            />
-            {errors.Email && (
-              <Text color="red.500">{errors.Email.message}</Text>
-            )}
-          </Field.Root>
-
-          <Field.Root invalid={!!errors.Subject}>
-            <Field.Label>Subject</Field.Label>
-            <Input {...register("Subject")} required placeholder="Subject" />
-            {errors.Subject && (
-              <Text color="red.500">{errors.Subject.message}</Text>
-            )}
-          </Field.Root>
-
-          <Field.Root invalid={!!errors.Message}>
-            <Field.Label>Message</Field.Label>
-            <Textarea
-              {...register("Message")}
-              required
-              placeholder="Enter your message"
-            />
-            {errors.Message && (
-              <Text color="red.500">{errors.Message.message}</Text>
-            )}
-          </Field.Root>
-        </Fieldset.Content>
-        <Button
-          type="submit"
-          alignSelf="flex-start"
-          bg="brand.maroon"
-          color="brand.white"
-          _hover={{ bg: "brand.gray" }}
-          loading={isLoading}
-          loadingText="Sending..."
-        >
-          Send Message
-        </Button>
       </Fieldset.Root>
-    </form>
+    </Box>
   );
 };
 

@@ -10,7 +10,7 @@ const Whatsapp = () => {
         phoneNumber="254716818835"
         accountName="JM Associates"
         allowClickAway={false}
-        avatar="https://jm-associates.vercel.app/_next/image?url=%2FLogo.png&w=640&q=75"
+        avatar="../public/Logo.png"
         chatMessage="Hello, how can We help you?"
         notification={true}
         notificationDelay={60000}

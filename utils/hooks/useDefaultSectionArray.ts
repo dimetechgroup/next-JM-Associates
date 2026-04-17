@@ -18,6 +18,7 @@ export const useDefaultSectionArray = (endpoint: string) => {
         `https://cms.jmassociates.co.ke/api/content/items/${endpoint}?locale=en`
       );
       setSectionArray(data); // Set fetched data
+      console.log("Fetched data for", endpoint, ":", data);
     } catch (axiosError: unknown) {
       // Handle errors
       const message =

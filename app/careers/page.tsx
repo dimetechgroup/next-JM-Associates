@@ -1,82 +1,66 @@
-"use client";
-import CommonHero from "@/components/common-hero";
 import Loading from "@/components/Loading";
+import Careers from "@/components/pageComponent/careerCo";
+import React, { Suspense } from "react";
 
-import { useDefaultSectionArray } from "@/utils/hooks/useDefaultSectionArray";
-import { Box, Heading, Text, VStack, Button, Link } from "@chakra-ui/react";
-import NextLink from "next/link";
+// app/careers/page.tsx   (or app/join-our-team/page.tsx)
+
+import type { Metadata } from "next";
+import { assets } from "@/public/assets";
+
+export const metadata: Metadata = {
+  title:
+    "Careers | Join Our Audit, Tax & Advisory Team in Nairobi | JM Associates LLP",
+  description:
+    "Join JM Associates LLP – a leading audit and tax consultancy firm in Nairobi, Kenya. Explore exciting career opportunities in audit, assurance, tax, advisory, and business process outsourcing. Grow your career with over 50 professionals across East Africa and become part of an ANTEA International member firm.",
+
+  keywords: [
+    "careers audit firm Nairobi",
+    "jobs tax consultancy Kenya",
+    "audit jobs Nairobi",
+    "tax consultant jobs Kenya",
+    "advisory careers East Africa",
+    "join audit team Kenya",
+    "accounting jobs Nairobi",
+    "JM Associates LLP careers",
+    "professional accountant jobs Kenya",
+    "audit and tax careers East Africa",
+  ],
+
+  openGraph: {
+    title: "Careers at JM Associates LLP | Join Our Growing Team in Kenya",
+    description:
+      "Build your career with a dynamic audit, tax, and advisory firm in Nairobi. Opportunities for accountants, consultants, and finance professionals across East Africa.",
+    images: [
+      {
+        url: assets.careerImage, // Recommended: 1200×630 image (team photo + "Join Our Team" text)
+        width: 1200,
+        height: 1200,
+        alt: "Careers at JM Associates LLP – Join Our Audit and Tax Team in Nairobi",
+      },
+    ],
+    type: "website",
+    locale: "en_KE",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Careers | Join JM Associates LLP in Nairobi",
+    description:
+      "Exciting opportunities in audit, tax consultancy, advisory, and outsourcing. Grow with Kenya’s leading professional services firm.",
+  },
+
+  alternates: {
+    canonical: "https://jmassociates.co.ke/careers", // Update if your route is /join-our-team
+  },
+
+  authors: [{ name: "JM Associates LLP" }],
+};
 
 const CareersPage = () => {
-  const {
-    sectionArray: CareersData,
-    loading,
-    error,
-  } = useDefaultSectionArray("careers");
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
-  if (!CareersData.length) {
-    return (
-      <Box>
-        <CommonHero title="Careers" image="/Home/career.jpg" />
-        <Box textAlign="center" py={10} px={6}>
-          <Heading as="h2" size="2xl" mb={6} color="teal.500">
-            No Open Positions
-          </Heading>
-          <Text fontSize="lg" color="gray.600">
-            We currently have no vacant positions available. Please check back
-            later.
-          </Text>
-        </Box>
-      </Box>
-    );
-  }
   return (
-    <>
-      <CommonHero title="Careers" image="/Home/career.jpg" />
-      <Box textAlign="center" py={10} px={6}>
-        <Heading as="h2" size="2xl" mb={6} color="teal.500">
-          Open Positions
-        </Heading>
-        {CareersData.length > 0 ? (
-          <VStack gap={6}>
-            {CareersData.map((job) => (
-              <Box
-                key={job._id}
-                p={5}
-                borderRadius="md"
-                boxShadow="md"
-                w="full"
-                maxW="600px"
-              >
-                <Heading as="h3" size="lg" color="gray.700">
-                  {job.title}
-                </Heading>
-                <Text fontSize="md" color="gray.500" mt={2}>
-                  {job.location}
-                </Text>
-                <NextLink
-                  href={`https://cms.jmassociates.co.ke/storage/uploads/${job.Attachment?.path}`}
-                  passHref
-                >
-                  <Button mt={4} colorScheme="teal">
-                    View Details
-                  </Button>
-                </NextLink>
-              </Box>
-            ))}
-          </VStack>
-        ) : (
-          <Text fontSize="lg" color="gray.600">
-            We currently have no vacant positions available. Please check back
-            later.
-          </Text>
-        )}
-      </Box>
-    </>
+    <Suspense fallback={<Loading />}>
+      <Careers />
+    </Suspense>
   );
 };
 

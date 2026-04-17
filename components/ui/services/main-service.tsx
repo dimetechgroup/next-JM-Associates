@@ -1,153 +1,197 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-  Box,
-  VStack,
-  Text,
-  Button,
-  Image,
-  Heading,
-  Flex,
-} from "@chakra-ui/react";
+
 import { MarginX } from "@/utils/constants";
 import { useDefaultSectionArray } from "@/utils/hooks/useDefaultSectionArray";
-import Loading from "@/components/Loading";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Image,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Loading from "@/components/Loading";
 
 const MainService = () => {
-  // get current url parameters
   const searchParams = useSearchParams();
   const serviceId = searchParams.get("tab");
+
   const {
     error,
     loading,
     sectionArray: serviceData,
   } = useDefaultSectionArray("services");
 
-  const [activeTab, setActiveTab] = useState<DefaultSectionInterface | null>(
-    null
-  );
+  const [activeTab, setActiveTab] = useState<any>(null);
 
   useEffect(() => {
     if (serviceData && serviceData.length > 0) {
-      const matchedTab = serviceData.find((tab) => tab._id === serviceId);
-      if (matchedTab) {
-        setActiveTab(matchedTab);
-      } else {
-        setActiveTab(serviceData[0]); // fallback to first tab if no match
-      }
+      const matched = serviceData.find((tab: any) => tab._id === serviceId);
+      setActiveTab(matched || serviceData[0]);
     }
   }, [serviceData, serviceId]);
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
-
+  if (loading) return <Loading />;
+  if (error) return <Text color="red.500">Error: {error}</Text>;
   if (!serviceData || serviceData.length === 0) {
     return <Text>No services available</Text>;
   }
-
-  if (!activeTab) {
-    return null; // or <Loading /> optionally
-  }
+  if (!activeTab) return null;
 
   return (
-    <Box as="main" mx={{ base: 2, md: MarginX }}>
-      {/* Header Section */}
-      <Box textAlign="center" mb={8} p={4} borderRadius="md">
-        <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" mb={4}>
-          Our Services
-        </Text>
-        <Text fontSize={{ base: "md", md: "lg" }} color="gray.600">
-          Discover a wide range of professional services tailored to meet the
-          unique needs of your business. Our team of experts is dedicated to
-          delivering innovative solutions and exceptional results.
-        </Text>
-      </Box>
+    <Box as="main" py={{ base: 12, md: 16 }} bg="gray.50">
+      <Box mx={MarginX} maxW="1400px">
+        {/* Header */}
+        <VStack textAlign="center" mb={12} gap={4}>
+          <Text
+            fontSize="sm"
+            fontWeight="600"
+            letterSpacing="2px"
+            color="#aa1f30"
+          >
+            WHAT WE OFFER
+          </Text>
+          <Heading
+            as="h1"
+            fontSize={{ base: "3xl", md: "4.5xl" }}
+            fontWeight="700"
+            color="gray.800"
+          >
+            Our Professional Services
+          </Heading>
+          <Text maxW="680px" fontSize="lg" color="gray.600">
+            Expert solutions tailored to your business needs. From audit and tax
+            to strategic consulting and financial advisory.
+          </Text>
+        </VStack>
 
-      {/* Main Content Container */}
-      <Box p={4} bg="white" boxShadow="md">
-        <Flex
-          direction={{ base: "column", md: "row" }} // Stack vertically on mobile, horizontal on desktop
-          align="stretch"
-          height={{ base: "auto", md: "100vh" }}
+        <Grid
+          templateColumns={{ base: "1fr", lg: "340px 1fr" }}
+          gap={{ base: 8, lg: 12 }}
         >
-          {/* Sidebar */}
-          <VStack
-            bg="gray.100"
-            align="stretch"
-            width={{ base: "100%", md: "250px" }} // Full width on mobile, fixed width on desktop
-            gap={2}
-            pb={4}
-          >
-            {serviceData.map((tab) => (
-              <Button
-                key={tab.title}
-                variant="ghost"
-                justifyContent="flex-start"
-                bg={activeTab.title === tab.title ? "red.500" : "transparent"}
-                color={activeTab.title === tab.title ? "white" : "black"}
-                _hover={{ bg: "blue.300", color: "black" }}
-                onClick={() => setActiveTab(tab)}
-                width="100%"
-              >
-                {tab.title}
-              </Button>
-            ))}
-          </VStack>
-
-          {/* Content Area */}
-          <Box
-            flex={1}
-            px={{ base: 4, md: 6 }}
-            overflowY="auto"
-            maxHeight={{ base: "auto", md: "calc(s100vh - 100px)" }}
-          >
-            <Image
-              src={
-                activeTab.image
-                  ? `https://cms.jmassociates.co.ke/storage/uploads${activeTab.image.path}`
-                  : "/Home/about.jpeg"
-              }
-              alt={activeTab.title}
-              width="100%"
-              height={{ base: "200px", md: "300px" }}
-              objectFit="cover"
-              mb={4}
-              borderRadius="md"
-            />
-            <Heading
-              as="h2"
-              size={{ base: "xl", md: "3xl" }} // Smaller heading on mobile
-              color="red.600"
-              textAlign="center"
-              py={6}
-              mb={2}
-              fontFamily={"initial"}
-              fontWeight="bold"
+          {/* Sidebar Navigation */}
+          <GridItem>
+            <Box
+              bg="white"
+              p={6}
+              borderRadius="2xl"
+              boxShadow="sm"
+              position="sticky"
+              top="100px"
             >
-              {" "}
-              {activeTab.title}
-            </Heading>
+              <Text
+                fontSize="lg"
+                fontWeight="600"
+                mb={6}
+                color="gray.800"
+                borderBottom="2px solid #aa1f30"
+                pb={3}
+              >
+                Services
+              </Text>
 
-            <Text
-              fontSize={{ base: "sm", md: "md" }}
-              whiteSpace="pre-line"
-              mt={2}
-              // lineBreak={"anywhere"}
-              lineHeight={
-                { base: "1.5", md: "2" } // Adjust line height for mobile
-              }
-              dangerouslySetInnerHTML={{
-                __html: (activeTab.description ?? "").replace(/\n/g, "<br />"),
-              }} // Convert newlines to <br /> tags
-            />
-          </Box>
-        </Flex>
+              <VStack align="stretch" gap={2}>
+                {serviceData.map((service: any) => (
+                  <Button
+                    key={service._id}
+                    variant="ghost"
+                    justifyContent="flex-start"
+                    py={4}
+                    px={5}
+                    fontWeight={activeTab._id === service._id ? "700" : "500"}
+                    bg={
+                      activeTab._id === service._id ? "#aa1f30" : "transparent"
+                    }
+                    color={activeTab._id === service._id ? "white" : "gray.700"}
+                    _hover={{
+                      bg:
+                        activeTab._id === service._id ? "#aa1f30" : "gray.100",
+                    }}
+                    onClick={() => setActiveTab(service)}
+                    borderRadius="lg"
+                    transition="all 0.2s"
+                  >
+                    {service.title}
+                  </Button>
+                ))}
+              </VStack>
+            </Box>
+          </GridItem>
+
+          {/* Main Content Area */}
+          <GridItem>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                <Box
+                  bg="white"
+                  borderRadius="3xl"
+                  overflow="hidden"
+                  boxShadow="lg"
+                >
+                  {/* Hero Image */}
+                  <Box>
+                    <Image
+                      src={
+                        activeTab.image
+                          ? `https://cms.jmassociates.co.ke/storage/uploads${activeTab.image.path}`
+                          : "/Home/about.jpeg"
+                      }
+                      alt={activeTab.title}
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      sizes="cover"
+                    />
+                    <Box bg="linear-gradient(to top, rgba(0,0,0,0.75), transparent)" />
+
+                    <Box mt={10} py={{ base: "lg" }} w={"full"}>
+                      <Heading
+                        as="h2"
+                        size="3xl"
+                        color="#aa1f30"
+                        fontWeight="900"
+                        textShadow={"xl"}
+                        lineHeight="1.1"
+                        px={"50px"}
+                      >
+                        {activeTab.title}
+                      </Heading>
+                    </Box>
+                  </Box>
+
+                  {/* Description */}
+                  <Box p={{ base: 8, md: 12 }}>
+                    <Text
+                      fontSize={{ base: "sm", md: "md" }}
+                      lineHeight="1.85"
+                      color="gray.700"
+                      dangerouslySetInnerHTML={{
+                        __html: (activeTab.description ?? "").replace(
+                          /\n/g,
+                          "<br /><br />",
+                        ),
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </motion.div>
+            </AnimatePresence>
+          </GridItem>
+        </Grid>
       </Box>
     </Box>
   );

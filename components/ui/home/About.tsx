@@ -1,143 +1,170 @@
 "use client";
-import Loading from "@/components/Loading";
 import { MarginX } from "@/utils/constants";
 import { useDefaultSectionData } from "@/utils/hooks/useDefaultSectionData";
 import {
   Box,
+  Button,
   Flex,
   Grid,
   GridItem,
   Heading,
-  Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { motion } from "framer-motion";
+
+import Loading from "@/components/Loading";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const About = () => {
   const { sectionData, error, loading } = useDefaultSectionData("homeabout");
 
-  if (loading) {
-    return <Loading />;
-  }
-
+  if (loading) return <Loading />;
   if (error) {
-    return <Text>Error: {error}</Text>;
+    return (
+      <Box py={20} textAlign="center">
+        <Text fontSize="xl" color="red.500">
+          Error: {error}
+        </Text>
+      </Box>
+    );
   }
 
   return (
-    <Box marginX={MarginX} py={10}>
-      <Grid
-        templateColumns={{
-          base: "repeat(1, 1fr)",
-          md: "repeat(5, 1fr)",
-          lg: "repeat(5, 1fr)",
-        }}
-        gap="6"
+    <Box as="section" py={{ base: 16, md: 24 }} bg="white">
+      <Flex
+        mx={MarginX}
+        direction={{ base: "column", lg: "row" }}
+        gap={{ base: 12, lg: 16 }}
+        align="start"
       >
-        <GridItem colSpan={2}>
-          <Box borderRadius="md" overflow="hidden" boxShadow="md" width={""}>
+        {/* Left Side - Image */}
+        <Box
+          flex="1"
+          position="relative"
+          borderRadius="2xl"
+          px={{ base: 6, md: 10 }}
+          overflow="hidden"
+          boxShadow="2xl"
+          _hover={{ transform: "scale(1.02)" }}
+          transition="transform 0.6s ease"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+          >
             <Image
               src={
                 sectionData?.image?.path
                   ? `https://cms.jmassociates.co.ke/storage/uploads${sectionData.image.path}`
                   : "/about.jpg"
               }
-              alt="About"
-              width={500}
-              height={500}
-              objectFit="contain"
-              layout="responsive"
+              alt="About JM Associates"
+              width={700}
+              height={600}
+              style={{
+                width: "100%",
+                height: "auto",
+                objectFit: "cover",
+                borderRadius: "16px",
+              }}
+              priority
             />
-          </Box>
-        </GridItem>
+          </motion.div>
 
-        <GridItem
-          colSpan={3}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          px={5}
-        >
-          <Box textAlign="start" width="100%">
-            <Box textAlign="center">
+          {/* Subtle overlay accent */}
+          <Box
+            position="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            height="40%"
+            bg="linear-gradient(transparent, rgba(170,31,48,0.15))"
+            pointerEvents="none"
+          />
+        </Box>
+
+        {/* Right Side - Content */}
+        <Box flex="1" p={{ base: 10 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <VStack align="flex-start" gap={6}>
+              {/* Accent Line + Title */}
+              <Flex align="center" gap={4}>
+                <Box w="60px" h="3px" bg="#aa1f30" borderRadius="full" />
+                <Text
+                  fontSize="sm"
+                  fontWeight="600"
+                  letterSpacing="2px"
+                  color="#aa1f30"
+                  textTransform="uppercase"
+                >
+                  Who We Are
+                </Text>
+              </Flex>
+
               <Heading
-                size="5xl"
-                fontFamily="initial"
-                mx="auto"
-                width="fit-content"
+                as="h2"
+                fontSize={{ base: "3xl", md: "4.5xl", lg: "5xl" }}
+                lineHeight="1.1"
+                fontWeight="700"
+                color="gray.800"
               >
-                {sectionData?.title || "Default Title"}
+                {sectionData?.title || "About JM Associates"}
               </Heading>
 
-              <Flex justify="center" width="100%">
-                <Box
-                  width="50%" // You can use 'sm', 'md' etc. or 'px' values too
-                  maxWidth="100%"
-                  divideY="2px"
-                  divideColor="red.500"
-                  divideStyle="solid"
-                  py={1}
-                  display="flex"
-                  flexDirection="column"
-                >
-                  <Box></Box>
-                  <Box></Box>
-                </Box>
-              </Flex>
-            </Box>
-
-            {/* Second Divider
-            <Box
-              pl={5}
-              width="100%"
-              divideY={"2px"}
-              divideColor={"red.500"}
-              divideStyle={"solid"}
-            >
-              <Box></Box>
-              <Box></Box>
-            </Box> */}
-
-            <Text
-              py={10}
-              fontFamily={"initial"}
-              fontSize={["md", "xl"]}
-              maxW="100%"
-              textAlign="justify"
-              dangerouslySetInnerHTML={{
-                __html: sectionData?.description || "No description available.",
-              }}
-            />
-          </Box>
-
-          <Link href={"/about-us"} passHref>
-            <Box
-              width="100%"
-              _groupHover={{ color: "black", cursor: "pointer" }}
-            >
+              {/* Description */}
               <Text
-                fontWeight="bold"
-                color="red.500"
-                display="inline-flex"
-                fontSize={["md", "xl"]}
-                alignItems="center"
-                _hover={{
-                  color: "black",
-                  transform: "scale(1.1)",
-                  transition: "all 0.3s",
+                fontSize={{ base: "sm", md: "base" }}
+                lineHeight="1.75"
+                color="gray.600"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    sectionData?.description || "No description available.",
                 }}
-              >
-                Learn more about us
-                <Box as="span" ml={2} fontSize={["md", "xl"]} fontWeight="bold">
-                  →
-                </Box>
-              </Text>
-            </Box>
-          </Link>
-        </GridItem>
-      </Grid>
+              />
+
+              {/* Learn More Link */}
+              <Link href="/about-us" passHref>
+                <motion.div
+                  whileHover={{ x: 10 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "start",
+                    gap: "3px",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    color="#aa1f30"
+                    fontSize="lg"
+                    fontWeight="600"
+                    _hover={{
+                      bg: "transparent",
+                      color: "#8a1926",
+                    }}
+                    px={0}
+                    py={6}
+                  >
+                    <p>Learn more about us</p>
+                  </Button>
+                  <FaArrowRight size={10} color="#8a1926" />
+                </motion.div>
+              </Link>
+            </VStack>
+          </motion.div>
+        </Box>
+      </Flex>
     </Box>
   );
 };

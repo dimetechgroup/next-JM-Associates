@@ -1,4 +1,10 @@
-import { About, Carousel, GetAQuote, Services } from "@/components/ui/home";
+import {
+  About,
+  Carousel,
+  GetAQuote,
+  RecentNews,
+  Services,
+} from "@/components/ui/home";
 import HomeNews from "./blogs/page";
 
 export default function Home() {
@@ -8,6 +14,7 @@ export default function Home() {
       <About />
       <Services />
       <GetAQuote />
+      {/* <RecentNews /> */}
       <HomeNews />
     </>
   );
