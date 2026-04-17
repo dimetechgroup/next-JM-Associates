@@ -15,6 +15,8 @@ const inter = Inter({
   display: "swap",
   subsets: ["latin"],
 });
+// Ignore missing type declarations for CSS side-effect import
+// @ts-ignore
 import "./globals.css";
 import PageToTheTop from "@/components/common/PageToTheTop";
 
