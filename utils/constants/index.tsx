@@ -59,19 +59,19 @@ export const HomeLinks = [
     text: "Home",
   },
   {
-    link: "/about-us",
+    link: "/about-us/",
     text: "About Us",
   },
   {
-    link: "/services",
+    link: "/services/",
     text: "Services",
   },
   {
-    link: "/blogs",
+    link: "/blogs/",
     text: "Insights",
   },
   {
-    link: "/careers",
+    link: "/careers/",
     text: "Careers",
   },
   {
