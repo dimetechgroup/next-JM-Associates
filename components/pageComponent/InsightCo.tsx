@@ -9,7 +9,6 @@ import {
   Container,
   Flex,
   Grid,
-  GridItem,
   Heading,
   Image,
   Text,
@@ -57,8 +56,13 @@ const InsightCom = () => {
 
   const totalPages = Math.ceil(insightData.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = insightData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const currentItems = insightData.sort((a, b) =>{  
+            const dateA = new Date(a._created ?? "").getTime();
+            const dateB = new Date(b._created ?? "").getTime();
+            return dateB - dateA; // Most recent first
+          }).slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+ 
   return (
     <Box bg="gray.50" minH="100vh">
       {/* Hero Section */}
@@ -152,7 +156,7 @@ const InsightCom = () => {
                   <VStack align="stretch" p={6} gap={4}>
                     <HStack color="gray.500" fontSize="sm">
                       <FaCalendarAlt />
-                      <Text>{insight.start_date || "Recent"}</Text>
+                      <Text>{"Recent"}</Text>
                     </HStack>
 
                     <Heading

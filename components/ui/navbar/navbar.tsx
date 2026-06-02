@@ -52,7 +52,7 @@ const Navbar = () => {
           gap={6}
         >
           {/* Logos - Same size from tablet and up */}
-          <HStack gap={{ base: 3, md: 5 }} align="center">
+          <HStack gap={{ base: 3, md: 5 }} align="start">
             <Link href="/">
               <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
                 <Image
@@ -71,8 +71,8 @@ const Navbar = () => {
                 <Image
                   src="/Antea.png"
                   alt="Antea"
-                  width={110}
-                  height={72}
+                  width={135}
+                  height={125}
                   priority
                   style={{ objectFit: "contain" }}
                 />

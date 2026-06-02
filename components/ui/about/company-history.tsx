@@ -98,16 +98,41 @@ const CompanyHistory = () => {
 
       {/* History Content Section */}
       <Container w="full" px={{ base: 4, md: 6 }}>
-        <VStack align="stretch">
-          {/* Title with Decorative Element */}
-          <Box textAlign="center" position="relative">
-            <Heading
-              as="h2"
-              fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-              fontWeight="bold"
-              color="gray.800"
-              mb={4}
-              letterSpacing="tight"
+          <VStack align="stretch">
+            {/* Title with Decorative Element */}
+            <Box textAlign="center" position="relative">
+              <Heading
+                as="h2"
+                fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                fontWeight="bold"
+                color="gray.800"
+                mb={4}
+                letterSpacing="tight"
+              >
+                {sectionData?.title || "Our Company History"}
+              </Heading>
+              <Box
+                w="80px"
+                h="3px"
+                bg="#aa1f30"
+                mx="auto"
+                mb={6}
+                borderRadius="full"
+              />
+              <Text
+                color="#aa1f30"
+                fontSize="sm"
+                fontWeight="bold"
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Building Excellence Since 2014
+              </Text>
+            </Box>
+
+            {/* Description with Improved Readability */}
+            <Box
+              p={{ base: 3, md: 4}}
             >
               {sectionData?.title || "Our Company History"}
             </Heading>

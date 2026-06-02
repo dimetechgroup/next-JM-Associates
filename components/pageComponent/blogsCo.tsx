@@ -57,12 +57,14 @@ const BlogsCom = () => {
     (a, b) => new Date(getDateValue(b)).getTime() - new Date(getDateValue(a)).getTime()
   );
 
-  const sortedInsights = [...(insightData || [])].sort(
-    (a, b) => new Date(getDateValue(b)).getTime() - new Date(getDateValue(a)).getTime()
-  );
+  const sortedInsights = [...(insightData || [])].sort((a, b) =>{  
+            const dateA = new Date(a._created ?? "").getTime();
+            const dateB = new Date(b._created ?? "").getTime();
+            return dateA - dateB; // Most recent first
+          })
 
   // Get latest 3 items from each
-  const latestNews = sortedNews.slice(0, 3);
+  const latestNews = sortedNews.slice();
   const latestInsights = sortedInsights.slice(0, 3);
 
   const formatDate = (item: any) => {
@@ -113,7 +115,7 @@ const BlogsCom = () => {
           gap={{ base: 4, lg: 6 }}
           mb={20}
         >
-          {newsData.slice(0, 3).map((article, index) => (
+          {newsData.slice((Number(newsData.length)-2), Number(newsData.length)).map((article, index) => (
             <motion.div
               key={article._id}
               initial={{ opacity: 0, y: 50 }}
@@ -151,7 +153,6 @@ const BlogsCom = () => {
                     <Heading as="h3" fontSize="lg" fontWeight="700" lineHeight="1.35">
                       {article.title}
                     </Heading>
-                     {article._id}
                   </VStack>
                 </GridItem>
               </Link>
@@ -186,7 +187,11 @@ const BlogsCom = () => {
           templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }}
           gap={{ base: 4, lg: 6 }}
         >
-          {sortedInsights.slice(0, 3).map((insight, index) => (
+          {sortedInsights.slice(Number(sortedInsights.length - 3),Number(sortedInsights.length)).sort((a, b) =>{  
+            const dateA = new Date(a._created ?? "").getTime();
+            const dateB = new Date(b._created ?? "").getTime();
+            return dateB - dateA; // Most recent first
+          }).map((insight, index) => (
             <motion.div
               key={insight._id}
               initial={{ opacity: 0, y: 50 }}

@@ -101,7 +101,7 @@ export const contactsData = [
     label: "Westpark Towers, 4th Floor, Westlands, Nairobi",
     title: "Location",
     icon: <CiLocationOn />,
-    link: `https://goo.gl/maps/6K3xk9vY7G1gJ5nV6`,
+    link: `https://www.google.com/maps/place/Westpark+Towers/@-1.2646256,36.8070609,17z/data=!3m1!4b1!4m6!3m5!1s0x182f176afe68fe1b:0xf590c6d95ac4594f!8m2!3d-1.2646256!4d36.8070609!16s%2Fg%2F11fjfmcspn?entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D`,
     bg: "red.500",
     color: "black",
   },

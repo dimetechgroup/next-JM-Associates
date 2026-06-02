@@ -45,7 +45,6 @@ const About = () => {
           flex="1"
           position="relative"
           borderRadius="2xl"
-          px={{ base: 6, md: 10 }}
           overflow="hidden"
           boxShadow="2xl"
           _hover={{ transform: "scale(1.02)" }}
@@ -64,7 +63,7 @@ const About = () => {
                   : "/about.jpg"
               }
               alt="About JM Associates"
-              width={700}
+              width={800}
               height={600}
               style={{
                 width: "100%",
