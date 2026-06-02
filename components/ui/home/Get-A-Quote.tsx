@@ -19,14 +19,56 @@ import { FormControl, FormErrorMessage } from "@chakra-ui/form-control";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import { toaster } from "../toaster";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_SUBMISSIONS = 3; // Maximum submissions per window
+
+// Helper to get submission history from localStorage
+const getSubmissionHistory = (): number[] => {
+  if (typeof window === "undefined") return [];
+  const stored = localStorage.getItem("quoteFormSubmissions");
+  return stored ? JSON.parse(stored) : [];
+};
+
+// Helper to save submission timestamp to localStorage
+const addSubmission = (): void => {
+  const now = Date.now();
+  const history = getSubmissionHistory();
+  history.push(now);
+  localStorage.setItem("quoteFormSubmissions", JSON.stringify(history));
+};
+
+// Helper to check if user can submit
+const canSubmit = (): { allowed: boolean; remaining: number; resetTime: number } => {
+  const history = getSubmissionHistory();
+  const now = Date.now();
+  
+  // Filter out submissions outside the current window
+  const validSubmissions = history.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW);
+  
+  const remaining = Math.max(0, MAX_SUBMISSIONS - validSubmissions.length);
+  const allowed = validSubmissions.length < MAX_SUBMISSIONS;
+  
+  // Calculate reset time (when the oldest submission expires)
+  const resetTime = allowed ? 0 : validSubmissions[0] + RATE_LIMIT_WINDOW - now;
+  
+  return { allowed, remaining, resetTime };
+};
+
 export default function GetAQuote() {
   const [isLoading, setIsLoading] = useState(false);
+  const [rateLimitInfo, setRateLimitInfo] = useState({ allowed: true, remaining: MAX_SUBMISSIONS, resetTime: 0 });
+
+  // Check rate limit on mount
+  useEffect(() => {
+    setRateLimitInfo(canSubmit());
+  }, []);
 
   const {
     register,
@@ -38,26 +80,49 @@ export default function GetAQuote() {
   });
 
   const handleFormSubmit = async (data: QuoteFormData) => {
+    // Check rate limit before submitting
+    const limitCheck = canSubmit();
+    if (!limitCheck.allowed) {
+      const minutesLeft = Math.ceil(limitCheck.resetTime / 60000);
+      toast.error(`Rate limit exceeded. Please try again in ${minutesLeft} minute${minutesLeft > 1 ? "s" : ""}.`);
+      return;
+    }
+
     setIsLoading(true);
 
-    try {
-      await emailjs.send(
-        "service_0zolm9a",
-        "template_fohpjjk",
-        {
-          name: data.Fullname,
-          email: data.Email,
-          phone: data.Phone,
-          company: data.Company,
-          message: data.Message,
-          time: new Date().toLocaleString(),
-        },
-        "nXgCxgWCHRmlr07qR",
-      );
 
-      toast.success(
-        "Quote Request Sent, Thank you for reaching out! We'll get back to you within 24 hours.",
-      );
+    const serviceID2 = process.env.NEXT_PUBLIC_SERVICE_ID as string
+    const templateID2 = process.env.NEXT_PUBLIC_TEMPLATE_ID2 as string
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_API_KEY as string
+
+     if (!serviceID2 || !templateID2 || !publicKey) {
+      toast.error("Configuration error. Please contact support.");
+      console.error("Missing EmailJS configuration");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+        await emailjs.send(
+          serviceID2,
+          templateID2,
+          {
+            name: data.Fullname,
+            email: data.Email,
+            phone: data.Phone,
+            company: data.Company,
+            message: data.Message,
+            time: new Date().toLocaleString(),
+          },
+          publicKey
+        );
+
+      // Record successful submission
+      addSubmission();
+      // Update rate limit info
+      setRateLimitInfo(canSubmit());
+
+      toast.success("Quote Request Sent, Thank you for reaching out! We'll get back to you within 24 hours.");
 
       reset();
     } catch (error) {
@@ -246,19 +311,21 @@ export default function GetAQuote() {
                   <Button
                     type="submit"
                     size="lg"
-                    bg="#aa1f30"
+                    bg={rateLimitInfo.allowed ? "#aa1f30" : "gray.400"}
                     color="white"
                     px={12}
                     py={7}
                     fontSize="lg"
                     fontWeight="600"
-                    // isLoading={isLoading}
+                    disabled={!rateLimitInfo.allowed || isLoading}
                     loadingText="Sending..."
-                    _hover={{ bg: "#8a1926", transform: "translateY(-2px)" }}
+                    _hover={rateLimitInfo.allowed ? { bg: "#8a1926", transform: "translateY(-2px)" } : {}}
                     transition="all 0.3s"
                     boxShadow="md"
                   >
-                    SUBMIT REQUEST
+                    {rateLimitInfo.allowed 
+                      ? `SUBMIT REQUEST (${rateLimitInfo.remaining} left today)` 
+                      : "RATE LIMIT REACHED"}
                   </Button>
                 </Flex>
               </form>

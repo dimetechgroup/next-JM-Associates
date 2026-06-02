@@ -1,7 +1,7 @@
 "use client";
 
 import { ContactFormData, ContactFormSchema } from "@/schema/ContactSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toaster } from "@/components/ui/toaster";
 import emailjs from "@emailjs/browser";
 
@@ -21,8 +21,60 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_SUBMISSIONS = 3; // Maximum submissions per window
+
+// Helper to get submission history from localStorage
+const getSubmissionHistory = (): number[] => {
+  if (typeof window === "undefined") return [];
+  const stored = localStorage.getItem("formSubmissions");
+  return stored ? JSON.parse(stored) : [];
+};
+
+// Helper to save submission timestamp to localStorage
+const addSubmission = (): void => {
+  const now = Date.now();
+  const history = getSubmissionHistory();
+  history.push(now);
+  localStorage.setItem("formSubmissions", JSON.stringify(history));
+};
+
+// Helper to check if user can submit
+const canSubmit = (): {
+  allowed: boolean;
+  remaining: number;
+  resetTime: number;
+} => {
+  const history = getSubmissionHistory();
+  const now = Date.now();
+
+  // Filter out submissions outside the current window
+  const validSubmissions = history.filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW,
+  );
+
+  const remaining = Math.max(0, MAX_SUBMISSIONS - validSubmissions.length);
+  const allowed = validSubmissions.length < MAX_SUBMISSIONS;
+
+  // Calculate reset time (when the oldest submission expires)
+  const resetTime = allowed ? 0 : validSubmissions[0] + RATE_LIMIT_WINDOW - now;
+
+  return { allowed, remaining, resetTime };
+};
+
 const ContactForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [rateLimitInfo, setRateLimitInfo] = useState({
+    allowed: true,
+    remaining: MAX_SUBMISSIONS,
+    resetTime: 0,
+  });
+
+  // Check rate limit on mount and when form is focused
+  useEffect(() => {
+    setRateLimitInfo(canSubmit());
+  }, []);
 
   const {
     register,
@@ -33,13 +85,27 @@ const ContactForm = () => {
     resolver: zodResolver(ContactFormSchema),
   });
 
+  const serviceID1 = process.env.NEXT_PUBLIC_SERVICE_ID as string;
+  const templateID = process.env.NEXT_PUBLIC_TEMPLATE_ID as string;
+  const publcKey = process.env.NEXT_PUBLIC_EMAILJS_API_KEY as string;
+
   const handleFormSubmit = async (data: ContactFormData) => {
+    // Check rate limit before submitting
+    const limitCheck = canSubmit();
+    if (!limitCheck.allowed) {
+      const minutesLeft = Math.ceil(limitCheck.resetTime / 60000);
+      toast.error(
+        `Rate limit exceeded. Please try again in ${minutesLeft} minute${minutesLeft > 1 ? "s" : ""}.`,
+      );
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       await emailjs.send(
-        "service_0zolm9a",
-        "template_m03wyr3",
+        serviceID1,
+        templateID,
         {
           name: data.Fullname,
           email: data.Email,
@@ -47,8 +113,13 @@ const ContactForm = () => {
           message: data.Message,
           time: new Date().toLocaleString(),
         },
-        "nXgCxgWCHRmlr07qR",
+        publcKey,
       );
+
+      // Record successful submission
+      addSubmission();
+      // Update rate limit info
+      setRateLimitInfo(canSubmit());
 
       toast.success("Message sent successfully! We will get back to you soon.");
 
@@ -190,26 +261,36 @@ const ContactForm = () => {
           </Stack>
 
           {/* Submit Button */}
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div
+            whileHover={rateLimitInfo.allowed ? { scale: 1.02 } : {}}
+            whileTap={rateLimitInfo.allowed ? { scale: 0.98 } : {}}
+          >
             <Button
               type="submit"
               size="lg"
               w="full"
-              bg="#aa1f30"
+              bg={rateLimitInfo.allowed ? "#aa1f30" : "gray.400"}
               color="white"
               fontWeight="600"
               py={7}
               fontSize="md"
               letterSpacing="0.5px"
-              _hover={{
-                bg: "#8a1926",
-                transform: "translateY(-1px)",
-              }}
+              disabled={!rateLimitInfo.allowed || isLoading}
+              _hover={
+                rateLimitInfo.allowed
+                  ? {
+                      bg: "#8a1926",
+                      transform: "translateY(-1px)",
+                    }
+                  : {}
+              }
               loading={isLoading}
               loadingText="Sending Message..."
               transition="all 0.3s ease"
             >
-              SEND MESSAGE
+              {rateLimitInfo.allowed
+                ? `SEND MESSAGE (${rateLimitInfo.remaining} left today)`
+                : "RATE LIMIT REACHED"}
             </Button>
           </motion.div>
 
