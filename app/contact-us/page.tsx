@@ -33,7 +33,7 @@ export const metadata: Metadata = {
       "Get in touch with our experienced team for professional audit, tax consultancy, advisory, and outsourcing services in Nairobi and across East Africa.",
     images: [
       {
-        url: assets.slider[0], // Create a 1200x630 image (office, team, or map)
+        url: assets.antea, // Create a 1200x630 image (office, team, or map)
         width: 1200,
         height: 1200,
         alt: "Contact JM Associates LLP - Audit and Tax Firm in Nairobi, Kenya",
