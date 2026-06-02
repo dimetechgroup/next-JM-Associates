@@ -5,7 +5,6 @@ import { useDefaultSectionArray } from "@/utils/hooks/useDefaultSectionArray";
 import {
   Box,
   Button,
-  Flex,
   Grid,
   GridItem,
   Heading,
@@ -30,6 +29,7 @@ const MainService = () => {
 
   const [activeTab, setActiveTab] = useState<any>(null);
 
+  // This is supposed to be like this
   useEffect(() => {
     if (serviceData && serviceData.length > 0) {
       const matched = serviceData.find((tab: any) => tab._id === serviceId);

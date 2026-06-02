@@ -8,7 +8,6 @@ import {
   Icon,
   Text,
   VStack,
-  IconButton,
   Button,
 } from "@chakra-ui/react";
 import Link from "next/link";
